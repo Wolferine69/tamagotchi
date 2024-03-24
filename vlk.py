@@ -1,6 +1,7 @@
 import pygame, datetime
 
-#TODO: Předělat vlkův spánek na systém stavů (například FSM - Finite State Machine)
+
+# TODO: Předělat vlkův spánek na systém stavů (například FSM - Finite State Machine)
 class Vlk(pygame.sprite.Sprite):
     # Konstruktor třídy Vlk
     def __init__(self, image, sleep, position):
