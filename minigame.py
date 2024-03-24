@@ -19,8 +19,8 @@ class Minigame:
         self.happy_image = pygame.image.load('icons/game.png').convert_alpha()
         self.happy_image_rect = self.happy_image.get_rect(topleft=(300, 0))
         self.ball_image = pygame.image.load('images/ball.png').convert_alpha()
-        self.ball_rect = (self.happy_image.get_rect
-                          (center=(self.w, random.randint(40,self.h-(self.happy_image_rect.height//2)))))
+        self.ball_rect = self.happy_image.get_rect()
+        self.place_ball()
 
     def play(self):
         clock = pygame.time.Clock()
@@ -57,6 +57,11 @@ class Minigame:
             elif (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.hlava_rect.bottom <= self.h:
                 self.hlava_rect.y += 5
 
+            if self.ball_rect.x < 0:
+                self.place_ball()
+            else:
+                self.ball_rect.x -=15
+
             clock.tick(60)
             pygame.display.flip()
 
@@ -64,3 +69,7 @@ class Minigame:
             return False
         else:
             return True
+
+    def place_ball(self):
+        self.ball_rect.center = (self.w, random.randint(40 + (self.ball_rect.height // 2),
+                                                        self.h - (self.ball_rect.height // 2)))
