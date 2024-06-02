@@ -1,6 +1,7 @@
 import pygame, datetime
 
 
+# Base Button class
 class Button(pygame.sprite.Sprite):
     def __init__(self, image, position, sound):
         super().__init__()
@@ -9,6 +10,7 @@ class Button(pygame.sprite.Sprite):
         self.sound = sound
 
 
+# Clean button class
 class Clean(Button):
     def __init__(self, image, position, sound):
         super().__init__(image, position, sound)
@@ -19,6 +21,7 @@ class Clean(Button):
         return pokracovat
 
 
+# Game button class
 class Game(Button):
     def __init__(self, image, position, sound):
         super().__init__(image, position, sound)
@@ -29,6 +32,7 @@ class Game(Button):
         return pokracovat
 
 
+# Sleep button class
 class Sleep(Button):
     def __init__(self, image, position, sound):
         super().__init__(image, position, sound)
@@ -40,6 +44,7 @@ class Sleep(Button):
             vlk.sleep_time = datetime.datetime.now()
 
 
+# Food button class
 class Food(Button):
     def __init__(self, image, position, sound):
         super().__init__(image, position, sound)

@@ -3,7 +3,10 @@ import random
 
 
 class MinigameFood:
-    def __init__(self, screen, vlk, sound):
+    def __init__(self, screen, vlk, sound, sound_success):
+        # Initialize the food minigame with screen, vlk (wolf), and sounds
+        self.sound_klik = sound
+        self.sound_success = sound_success
         self.screen = screen
         self.vlk = vlk
         self.w, self.h = pygame.display.get_surface().get_size()
@@ -21,7 +24,7 @@ class MinigameFood:
         self.happy_image_rect = self.happy_image.get_rect(topleft=(300, 0))
         self.font = pygame.font.Font(None, 36)
         self.hlava = pygame.image.load('icons/hlava.png').convert_alpha()
-        self.hlava_rect = self.hlava.get_rect(center=(self.w//2, self.h//2))
+        self.hlava_rect = self.hlava.get_rect(center=(self.w // 2, self.h // 2))
         self.krovi_image = pygame.image.load('icons/krovi.png').convert_alpha()
         self.blato_image = pygame.image.load('icons/blato.png').convert_alpha()
         self.krovi_rect = self.krovi_image.get_rect()
@@ -30,8 +33,8 @@ class MinigameFood:
         self.blato2_rect = self.blato_image.get_rect()
         self.blato3_rect = self.blato_image.get_rect()
 
-    # TODO zvuky
     def play(self):
+        # Place food and obstacles randomly
         self.food_rect.center = (random.randint(0 + self.food_rect.width // 2, self.w - self.food_rect.width // 2),
                                  random.randint(40 + self.food_rect.height // 2, self.h - self.food_rect.height))
         self.krovi_rect.center = (random.randint(0 + self.krovi_rect.width // 2, self.w - self.krovi_rect.width // 2),
@@ -46,6 +49,8 @@ class MinigameFood:
                                    random.randint(40 + self.blato_rect.height // 2, self.h - self.blato_rect.height))
         clock = pygame.time.Clock()
         pokracovat = True
+
+        # Main minigame loop
         while pokracovat:
             mouse = pygame.mouse.get_pos()
             keys = pygame.key.get_pressed()
@@ -61,7 +66,7 @@ class MinigameFood:
             self.screen.blit(self.happy_image, self.happy_image_rect)
             self.screen.blit(tired_percent, (140, 0))
             self.screen.blit(clean_percent, (240, 0))
-            self.screen.blit(happy_percent,(340,0))
+            self.screen.blit(happy_percent, (340, 0))
             self.screen.blit(food_percent, (440, 0))
             self.screen.blit(self.krovi_image, self.krovi_rect)
             self.screen.blit(self.krovi_image, self.krovi2_rect)
@@ -71,27 +76,31 @@ class MinigameFood:
             self.screen.blit(self.food_image, self.food_rect)
             self.screen.blit(self.hlava, self.hlava_rect)
 
+            # Change cursor on hover over back button
             if self.back_image_rect.collidepoint(mouse):
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             else:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
+            # Handle events
             for event in pygame.event.get():
                 if ((event.type == pygame.QUIT or
-                        (event.type == pygame.MOUSEBUTTONDOWN and self.back_image_rect.collidepoint(mouse))) or
+                     (event.type == pygame.MOUSEBUTTONDOWN and self.back_image_rect.collidepoint(mouse))) or
                         self.vlk.clean == 0 or self.vlk.happy == 0):
+                    self.sound_klik.play()
                     pokracovat = False
 
+            # Move head with keys
             if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.hlava_rect.top >= 40:
                 self.hlava_rect.y -= 10
-            elif (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.hlava_rect.bottom <= self.h:
+            if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.hlava_rect.bottom <= self.h:
                 self.hlava_rect.y += 10
-            elif (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.hlava_rect.left >= 0:
+            if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.hlava_rect.left >= 0:
                 self.hlava_rect.x -= 10
-            elif (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.hlava_rect.right <= self.w:
+            if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.hlava_rect.right <= self.w:
                 self.hlava_rect.x += 10
-                # TODO blato udelat nahodne po case?
-                # TODO pridelat unavu
+
+            # Check for collisions
             if self.hlava_rect.colliderect(self.food_rect):
                 self.food_rect.center = (random.randint(0 + self.food_rect.width // 2,
                                                         self.w - self.food_rect.width // 2),
@@ -110,6 +119,7 @@ class MinigameFood:
                     self.vlk.food += 5
                 else:
                     self.vlk.food = 100
+                self.sound_success.play()
 
             if (self.hlava_rect.colliderect(self.blato_rect) or
                     self.hlava_rect.colliderect(self.blato2_rect) or
