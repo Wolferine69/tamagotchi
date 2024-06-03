@@ -3,6 +3,7 @@
 ## Overview
 This is an example game demonstrating a virtual pet (Tamagotchi) written in Python using the Pygame library. The player can interact with the pet wolf (`Vlk`) by feeding it, playing with it, cleaning it, and putting it to sleep. The game is designed to show basic game mechanics and handling of different game states.
 
+![img.png](img.png)
 ## Getting Started
 
 ### Prerequisites
